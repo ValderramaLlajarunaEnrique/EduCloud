@@ -129,6 +129,12 @@ variable "log_bucket_name" {
   default     = ""
 }
 
+variable "geo_allowed_locations" {
+  description = "Lista de países permitidos"
+  type        = list(string)
+  default     = ["PE"]
+}
+
 # Agregar random_id para logs
 resource "random_id" "log_suffix" {
   byte_length = 4

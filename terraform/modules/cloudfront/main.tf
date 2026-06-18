@@ -12,47 +12,48 @@ resource "aws_cloudfront_distribution" "this" {
     bucket          = var.log_bucket_name != "" ? var.log_bucket_name : "educloud-cf-logs-${random_id.log_suffix.hex}.s3.amazonaws.com"
     prefix          = "cloudfront-logs/"
   }
-  
+
   origin {
     domain_name = var.s3_bucket_domain_name
     origin_id   = var.origin_id
-    
+
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
-  
+
   default_cache_behavior {
     target_origin_id = var.origin_id
-    
+
     allowed_methods = var.allowed_methods
     cached_methods  = var.cached_methods
-    
+
     forwarded_values {
       query_string = var.forward_query_string
       cookies {
         forward = var.cookie_forward
       }
     }
-    
+
     viewer_protocol_policy = var.viewer_protocol_policy
     min_ttl                = var.min_ttl
     default_ttl            = var.default_ttl
     max_ttl                = var.max_ttl
   }
-  
+
   restrictions {
     geo_restriction {
-      restriction_type = var.geo_restriction_type
+      restriction_type = var.geo_restriction_type != "none" ? var.geo_restriction_type : "whitelist"
+      locations        = var.geo_allowed_locations != [] ? var.geo_allowed_locations : ["PE"]
     }
   }
-  
+
   viewer_certificate {
     cloudfront_default_certificate = var.use_default_certificate
     ssl_support_method             = var.ssl_support_method
     minimum_protocol_version       = var.minimum_protocol_version
   }
-  
+
   tags = var.tags
 }
 
@@ -68,15 +69,15 @@ data "aws_iam_policy_document" "s3_policy" {
   statement {
     sid    = "AllowCloudFrontServicePrincipal"
     effect = "Allow"
-    
+
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
-    
+
     actions   = ["s3:GetObject"]
     resources = ["${var.s3_bucket_arn}/*"]
-    
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
