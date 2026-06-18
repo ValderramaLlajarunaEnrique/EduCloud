@@ -48,3 +48,17 @@ resource "aws_route53_record" "www" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_query_log" "this" {
+  count = var.create_hosted_zone ? 1 : 0
+  
+  zone_id = aws_route53_zone.this[0].zone_id
+  cloudwatch_log_group_arn = aws_cloudwatch_log_group.this.arn
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  count = var.create_hosted_zone ? 1 : 0
+  
+  name              = "/aws/route53/${var.domain_name}"
+  retention_in_days = 30
+}
