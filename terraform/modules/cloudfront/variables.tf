@@ -123,6 +123,17 @@ variable "create_s3_policy" {
   default     = true
 }
 
+variable "log_bucket_name" {
+  description = "Nombre del bucket para logs de CloudFront"
+  type        = string
+  default     = ""
+}
+
+# Agregar random_id para logs
+resource "random_id" "log_suffix" {
+  byte_length = 4
+}
+
 variable "tags" {
   description = "Etiquetas para CloudFront"
   type        = map(string)

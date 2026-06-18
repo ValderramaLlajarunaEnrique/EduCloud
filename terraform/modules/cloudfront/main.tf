@@ -6,6 +6,12 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled             = var.enabled
   default_root_object = var.default_root_object
+
+  logging_config {
+    include_cookies = false
+    bucket          = var.log_bucket_name != "" ? var.log_bucket_name : "educloud-cf-logs-${random_id.log_suffix.hex}.s3.amazonaws.com"
+    prefix          = "cloudfront-logs/"
+  }
   
   origin {
     domain_name = var.s3_bucket_domain_name
