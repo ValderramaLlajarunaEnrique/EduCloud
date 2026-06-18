@@ -6,6 +6,7 @@
 resource "aws_cloudfront_distribution" "this" {
   enabled             = var.enabled
   default_root_object = var.default_root_object
+  web_acl_id = var.web_acl_id
 
   logging_config {
     include_cookies = false
@@ -64,11 +65,11 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
-viewer_certificate {
-  acm_certificate_arn      = var.acm_certificate_arn
-  ssl_support_method       = "sni-only"
-  minimum_protocol_version = "TLSv1.2_2021"
-}
+  viewer_certificate {
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
   tags = var.tags
 }
 

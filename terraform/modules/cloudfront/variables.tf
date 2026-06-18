@@ -105,6 +105,12 @@ variable "acm_certificate_arn" {
   default     = null
 }
 
+variable "web_acl_id" {
+  description = "ID del WAF asociado"
+  type        = string
+  default     = null
+}
+
 variable "ssl_support_method" {
   description = "Método de soporte SSL"
   type        = string
