@@ -22,6 +22,22 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
+  origin_group {
+    origin_id = "PrimaryGroup"
+
+    failover_criteria {
+      status_codes = [403, 404, 500, 502, 503, 504]
+    }
+
+    member {
+      origin_id = var.origin_id
+    }
+
+    member {
+      origin_id = "FailoverOrigin"
+    }
+  }
+
   default_cache_behavior {
     target_origin_id = var.origin_id
 
