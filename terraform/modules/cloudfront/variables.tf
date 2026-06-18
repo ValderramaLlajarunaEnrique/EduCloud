@@ -94,9 +94,15 @@ variable "geo_restriction_type" {
 }
 
 variable "use_default_certificate" {
-  description = "Usar certificado por defecto de CloudFront"
+  description = "No usar certificado por defecto de CloudFront"
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "acm_certificate_arn" {
+  description = "ARN del certificado ACM para CloudFront"
+  type        = string
+  default     = null
 }
 
 variable "ssl_support_method" {
