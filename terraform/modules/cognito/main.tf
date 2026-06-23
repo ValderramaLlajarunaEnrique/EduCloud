@@ -72,7 +72,7 @@ resource "aws_cognito_user_pool_client" "this" {
 resource "aws_cognito_user_pool_domain" "this" {
   count = var.create_domain ? 1 : 0
   
-  domain       = var.domain_prefix != "" ? var.domain_prefix : "auth-${random_id.suffix.hex}"
+  domain       = var.domain_prefix != "" ? var.domain_prefix : "auth-${random_id.suffix[0].hex}"
   user_pool_id = aws_cognito_user_pool.this.id
 }
 
